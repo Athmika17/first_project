@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text Translator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      width: 500px;
+      max-width: 90%;
+      padding: 25px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      resize: none;
+      transition: 0.3s;
+    }
+    textarea:focus {
+      border-color: #4CAF50;
+      outline: none;
+      box-shadow: 0 0 6px rgba(76, 175, 80, 0.3);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    select {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #43a047;
+      transform: scale(1.05);
+    }
+
+    h3 {
+      margin-top: 20px;
+      color: #444;
+    }
+
+    .output-box {
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 10px;
+      min-height: 60px;
+      font-size: 16px;
+      color: #222;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🌍 English to Other Languages Translator</h2>
+    
+    <!-- Input -->
+    <textarea id="inputText" placeholder="Enter text in English..."></textarea>
+    
+    <!-- Language Dropdown + Button -->
+    <div class="row">
+      <select id="langSelect">
+        <option value="hi">Hindi</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="kn">Kannada</option>
+      </select>
+      <button onclick="translateText()">Translate</button>
+    </div>
+    
+    <!-- Output -->
+    <h3>Translated Text:</h3>
+    <div class="output-box" id="outputText">Your translation will appear here...</div>
+  </div>
+  
+  <script>
+    function translateText() {
+      let text = document.getElementById("inputText").value.trim();
+      let lang = document.getElementById("langSelect").value;
+      let outputBox = document.getElementById("outputText");
+
+      if (!text) {
+        outputBox.innerText = "⚠️ Please enter some text to translate.";
+        return;
+      }
+      
+      outputBox.innerText = "⏳ Translating...";
+      let url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`;
+      
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          outputBox.innerText = data.responseData.translatedText || "❌ Translation failed.";
+        })
+        .catch(err => {
+          outputBox.innerText = "⚠️ Error occurred while translating.";
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
